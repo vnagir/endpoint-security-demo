@@ -1,0 +1,5 @@
+com/endpoint/security/collector/model/RawSecurityEvent.class
+com/endpoint/security/collector/CollectorRunner.class
+com/endpoint/security/collector/RawEventWriter.class
+com/endpoint/security/collector/RawEventGenerator.class
+com/endpoint/security/CollectorServiceApplication.class

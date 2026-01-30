@@ -1,0 +1,4 @@
+com/endpoint/security/NormalizerServiceApplication.class
+com/endpoint/security/normalizer/model/SecurityEvent.class
+com/endpoint/security/normalizer/EventNormalizer.class
+com/endpoint/security/normalizer/NormalizerRunner.class

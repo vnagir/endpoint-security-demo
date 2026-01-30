@@ -1,0 +1,108 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: endpoint-security-postgres
+    environment:
+      POSTGRES_DB: endpoint_security
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  mongodb:
+    image: mongo:7
+    container_name: endpoint-security-mongodb
+    environment:
+      MONGO_INITDB_DATABASE: endpoint_security
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  collector-service:
+    build:
+      context: .
+      dockerfile: collector-service/Dockerfile
+    container_name: endpoint-security-collector
+    volumes:
+      - ./output:/app/output
+    environment:
+      COLLECTOR_OUTPUT_PATH: /app/output/raw-events.ndjson
+      COLLECTOR_INTERVAL_MS: "1000"
+      COLLECTOR_ALERT_PERCENTAGE: "3"
+
+  normalizer-service:
+    build:
+      context: .
+      dockerfile: normalizer-service/Dockerfile
+    container_name: endpoint-security-normalizer
+    depends_on:
+      - collector-service
+    volumes:
+      - ./output:/app/output
+    environment:
+      NORMALIZER_INPUT_PATH: /app/output/raw-events.ndjson
+      NORMALIZER_OUTPUT_PATH: /app/output/normalized-events.ndjson
+      NORMALIZER_DENYLIST: system_idle_process,svchost.exe
+
+  ingestion-service:
+    build:
+      context: .
+      dockerfile: ingestion-service/Dockerfile
+    container_name: endpoint-security-ingestion
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+    volumes:
+      - ./output:/app/output
+    environment:
+      INGESTION_INPUT_PATH: /app/output/normalized-events.ndjson
+      INGESTION_MAX_RECORDS_PER_POLL: ${INGESTION_MAX_RECORDS_PER_POLL:-0}
+      INGESTION_POLL_INTERVAL_MS: ${INGESTION_POLL_INTERVAL_MS:-3000}
+      DATABASE_URL: jdbc:postgresql://postgres:5432/endpoint_security
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: postgres
+      MONGODB_URI: mongodb://mongodb:27017/endpoint_security
+      MONGODB_DATABASE: endpoint_security
+
+  analytics-service:
+    build:
+      context: .
+      dockerfile: analytics-service/Dockerfile
+    container_name: endpoint-security-analytics
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      DATABASE_URL: jdbc:postgresql://postgres:5432/endpoint_security
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: postgres
+      MONGODB_URI: mongodb://mongodb:27017/endpoint_security
+      MONGODB_DATABASE: endpoint_security
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "-", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  postgres_data:
+  mongodb_data:

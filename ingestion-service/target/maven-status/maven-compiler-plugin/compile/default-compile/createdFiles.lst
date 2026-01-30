@@ -1,0 +1,7 @@
+com/endpoint/security/IngestionServiceApplication.class
+com/endpoint/security/ingestion/model/NormalizedEventRecord.class
+com/endpoint/security/ingestion/repository/SecurityEventRepository.class
+com/endpoint/security/ingestion/document/AlertDocument.class
+com/endpoint/security/ingestion/IngestionRunner.class
+com/endpoint/security/ingestion/repository/AlertDocumentRepository.class
+com/endpoint/security/ingestion/entity/SecurityEventEntity.class

@@ -1,0 +1,7 @@
+/Users/vinay/Documents/workspace/endpoint-security-demo/ingestion-service/src/main/java/com/endpoint/security/ingestion/entity/SecurityEventEntity.java
+/Users/vinay/Documents/workspace/endpoint-security-demo/ingestion-service/src/main/java/com/endpoint/security/ingestion/repository/AlertDocumentRepository.java
+/Users/vinay/Documents/workspace/endpoint-security-demo/ingestion-service/src/main/java/com/endpoint/security/ingestion/document/AlertDocument.java
+/Users/vinay/Documents/workspace/endpoint-security-demo/ingestion-service/src/main/java/com/endpoint/security/ingestion/model/NormalizedEventRecord.java
+/Users/vinay/Documents/workspace/endpoint-security-demo/ingestion-service/src/main/java/com/endpoint/security/ingestion/repository/SecurityEventRepository.java
+/Users/vinay/Documents/workspace/endpoint-security-demo/ingestion-service/src/main/java/com/endpoint/security/ingestion/IngestionRunner.java
+/Users/vinay/Documents/workspace/endpoint-security-demo/ingestion-service/src/main/java/com/endpoint/security/IngestionServiceApplication.java

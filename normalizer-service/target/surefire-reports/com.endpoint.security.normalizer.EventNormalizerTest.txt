@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.endpoint.security.normalizer.EventNormalizerTest
+-------------------------------------------------------------------------------
+Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.030 s -- in com.endpoint.security.normalizer.EventNormalizerTest
