@@ -160,7 +160,7 @@ The helper script `scripts/test-api.sh` runs a small set of these scenarios (hea
 
 ```bash
 # Build all modules
-mvn clean package -DskipTests
+mvn clean package
 
 # 1. Start Postgres and Mongo (or use Docker for DBs only)
 
